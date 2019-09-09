@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
 })
 
 //POST /api/accounts
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   const postData = req.body;
   db('accounts')
     .insert(postData, 'id')
@@ -33,5 +33,32 @@ router.post('/', (req, res) => {
       res.json(err);
   });
 });
+
+//UPDATE /api/accounts/:id
+router.put("/:id", (req, res) => {
+  const changes = req.body
+  db('accounts')
+    .where("id", req.params.id)
+    .update(changes)
+    .then(account => {
+      res.status(200).json({ message: `Updated ${account} entries` })
+    })
+    .catch(error => {
+      res.json(error)
+    })
+})
+
+//DELETE /api/accounts/:id
+router.delete("/:id", (req, res) => {
+  db("accounts")
+    .where("id", req.params.id)
+    .del()
+    .then(account => {
+      res.status(200).json({ message: `deleted ${account} entries`})
+    })
+    .catch(error => {
+      res.json(error);
+    })
+})
 
 module.exports = router;
