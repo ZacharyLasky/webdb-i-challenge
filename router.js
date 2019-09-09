@@ -16,4 +16,22 @@ router.get("/", (req, res) => {
       })
 })
 
+//POST /api/accounts
+router.post('/', (req, res) => {
+  const postData = req.body;
+  db('accounts')
+    .insert(postData, 'id')
+      .then(([id]) => {
+          db('accounts')
+            .where({ id }) 
+            .first() 
+            .then(account => {
+                res.status(200).json(account);
+            });
+      })
+  .catch(err => {
+      res.json(err);
+  });
+});
+
 module.exports = router;
